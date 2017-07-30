@@ -7,6 +7,7 @@
 //
 
 #import "ImageViewController.h"
+#import "FoldersTableViewController.h"
 
 @interface ImageViewController ()
 {
@@ -22,6 +23,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.navigationController.navigationBar.hidden = NO;
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(showShareMenu:)];
     if(img == nil)
         img = [[UIImage alloc] init];
     
@@ -40,11 +44,6 @@
     return img1;
 }
 
-- (IBAction)goBack:(id)sender
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -61,7 +60,7 @@
 */
 
 
-- (IBAction)showShareMenu:(id)sender
+- (void)showShareMenu:(id)sender
 {
     NSMutableArray *activityItem = [NSMutableArray arrayWithObjects:img, nil];
     UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:activityItem applicationActivities:nil];

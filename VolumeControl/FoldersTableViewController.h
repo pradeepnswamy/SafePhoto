@@ -10,6 +10,7 @@
 
 @interface FoldersTableViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
+@property (strong, nonatomic) NSString *documentPath;
 @property (weak, nonatomic) IBOutlet UITableView *folderListTable;
 
 @end

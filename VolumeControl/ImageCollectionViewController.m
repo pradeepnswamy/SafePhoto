@@ -7,12 +7,15 @@
 //
 
 #import "ImageCollectionViewController.h"
+#import "FoldersTableViewController.h"
 #import "ImageViewController.h"
-
+#import "GlobalSelector.h"
 
 @interface ImageCollectionViewController ()
 {
     NSMutableArray *imageArray;
+    NSString *selectedFolder;
+    NSString *documentPath;
 }
 @end
 
@@ -26,28 +29,31 @@ static NSString * const reuseIdentifier = @"Cell";
     [super viewDidLoad];
     
     self.navigationController.navigationBar.hidden = NO;
-    // Uncomment the following line to preserve selection between presentations
-    // self.clearsSelectionOnViewWillAppear = NO;
 
     // Register cell classes
     [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
     
+    selectedFolder = [[GlobalSelector sharedInstance] selectedFolder];
+    
+    NSString* path = [[GlobalSelector sharedInstance] documentPath];
+    documentPath = [path stringByAppendingPathComponent:selectedFolder];
+    
     NSArray *imgList = [self getAllImages];
     imageArray = [[NSMutableArray alloc] initWithArray:imgList];
+    [self.collectionView reloadData];
 }
 
 - (void) viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    self.navigationController.navigationBar.hidden = YES;
-    
 }
 
 - (NSArray *) getAllImages
 {
-    NSString *imgPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/MyFolder"];
+    //NSString *path = [NSString stringWithFormat:@"Documents/%@", selectedFolder];
+    NSString *imgPath = [documentPath stringByAppendingPathComponent:selectedFolder];
     NSError *error;
-    NSArray *dirContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:imgPath error:&error];
+    NSArray *dirContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:documentPath error:&error];
 //    NSLog(@"dirContent : %@", dirContent);
     return dirContent;
 }
@@ -94,11 +100,10 @@ static NSString * const reuseIdentifier = @"Cell";
 
 - (UIImage *)getImageFrom:(NSString *)imgStr
 {
-    NSString *imgPath = [NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/MyFolder/%@", imgStr]];
+    NSString *imgPath = [documentPath stringByAppendingPathComponent:imgStr];
     NSData *d = [[NSFileManager defaultManager] contentsAtPath:imgPath];
     
     UIImage *img = [UIImage imageWithData:d];
-//    return img;
     return [self imageWithImage:img scaleToSize:CGSizeMake(150, 150)];
 }
 
@@ -130,7 +135,7 @@ static NSString * const reuseIdentifier = @"Cell";
     UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
     ImageViewController *imgaveiwController = [storyBoard instantiateViewControllerWithIdentifier:@"ImageViewController"];
     imgaveiwController.imageName = [imageArray objectAtIndex:indexPath.row];
-    [self presentViewController:imgaveiwController animated:YES completion:nil];
+    [self.navigationController pushViewController:imgaveiwController animated:YES];
 }
 
 /*

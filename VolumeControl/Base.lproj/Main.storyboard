@@ -41,14 +41,6 @@
                                     <action selector="saveToLocal:" destination="BYZ-38-t0r" eventType="touchUpInside" id="PEt-Ar-23k"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GfM-nA-H77">
-                                <rect key="frame" x="154" y="28" width="67" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Show List"/>
-                                <connections>
-                                    <action selector="showImageList:" destination="BYZ-38-t0r" eventType="touchUpInside" id="5C7-hY-izg"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="T1a-EI-v1U">
                                 <rect key="frame" x="141" y="115" width="93" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
