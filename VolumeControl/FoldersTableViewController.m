@@ -9,7 +9,9 @@
 #import "FoldersTableViewController.h"
 
 @interface FoldersTableViewController ()
-
+{
+    NSMutableArray *folderListArray;
+}
 @end
 
 @implementation FoldersTableViewController
@@ -18,11 +20,96 @@
     [super viewDidLoad];
     
     self.navigationController.navigationBar.hidden = NO;
+    
+    if(folderListArray == nil)
+        folderListArray = [[NSMutableArray alloc] initWithArray:[self getAllFolders]];
+    
+    if([folderListArray containsObject:@".DS_Store"])
+        [folderListArray removeObject:@".DS_Store"];
+    
+    [self.folderListTable registerClass:[UITableViewCell class] forCellReuseIdentifier:@"CellIdentifier"];
+
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    //self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addFolder:)];
+
+    self.navigationController.navigationBar.hidden = NO;
+    
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectZero];
+    self.folderListTable.tableFooterView = footerView;
+    
+    [self.folderListTable reloadData];
+}
+
+- (void) addFolder: (id) sender
+{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"New Folder" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.textColor = [UIColor blueColor];
+        textField.borderStyle = UITextBorderStyleRoundedRect;
+        textField.placeholder = @"New Folder";
+    }];
+    
+    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSArray *textfields = alert.textFields;
+        UITextField *name = [textfields objectAtIndex:0];
+        if(name.text.length > 0){
+            if([self createNewFolderWithName:name.text])
+                [self updateFolderListArrayWithName:name.text];
+        }
+        else
+            [alert dismissViewControllerAnimated:YES completion:nil];
+    }]];
+    
+    [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [alert dismissViewControllerAnimated:YES completion:nil];
+    }]];
+
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (BOOL) createNewFolderWithName:(NSString*)folderName
+{
+    
+    NSString *path = [NSString stringWithFormat:@"Documents/%@", folderName];
+    NSString *folderPath = [NSHomeDirectory() stringByAppendingPathComponent:path];
+    
+    NSError *error;
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:folderPath])
+        [[NSFileManager defaultManager] createDirectoryAtPath:folderPath withIntermediateDirectories:NO attributes:nil error:&error];
+    
+    if(error){
+        NSLog(@"error : %@", [error localizedDescription]);
+        
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Error!!" message:[error localizedDescription] preferredStyle:UIAlertControllerStyleAlert];
+        
+        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [alert dismissViewControllerAnimated:YES completion:nil];
+        }]];
+        
+        [self presentViewController:alert animated:YES completion:nil];
+        return NO;
+    }
+    return true;
+}
+
+- (void) updateFolderListArrayWithName:(NSString*)folderName
+{
+    [folderListArray addObject:folderName];
+    [self.folderListTable reloadData];
+}
+
+- (NSArray *) getAllFolders
+{
+    NSString *imgPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+    NSError *error;
+    NSArray *dirContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:imgPath error:&error];
+    NSLog(@"dirContent : %@", dirContent);
+    return dirContent;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -33,24 +120,29 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-#warning Incomplete implementation, return the number of sections
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-#warning Incomplete implementation, return the number of rows
-    return 0;
+    return folderListArray.count;
 }
 
-/*
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
     
-    // Configure the cell...
+    static NSString *CellIdentifier = @"CellIdentifier";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    
+    if(cell == nil)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    }
+    
+    cell.textLabel.text = [folderListArray objectAtIndex:indexPath.row];
     
     return cell;
 }
-*/
+
 
 /*
 // Override to support conditional editing of the table view.

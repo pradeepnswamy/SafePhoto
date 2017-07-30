@@ -25,16 +25,20 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+        
     storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
     
-    NSLog(@"list folders : %@", [self getAllImages]);
     self.imgpic = [[UIImagePickerController alloc] init];
     self.imgpic.delegate = self;
     
     // Do any additional setup after loading the view, typically from a nib.
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    self.navigationController.navigationBar.hidden = YES;
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -44,16 +48,7 @@
 - (IBAction)showFolders:(id)sender
 {
     FoldersTableViewController *ftvc = [storyBoard instantiateViewControllerWithIdentifier:@"FoldersTableViewController"];
-    [self presentViewController:ftvc animated:YES completion:nil];
-}
-
-- (NSArray *) getAllImages
-{
-    NSString *imgPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
-    NSError *error;
-    NSArray *dirContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:imgPath error:&error];
-    //    NSLog(@"dirContent : %@", dirContent);
-    return dirContent;
+    [self.navigationController pushViewController:ftvc animated:YES];
 }
 
 - (IBAction)openGallery:(id)sender
@@ -134,22 +129,22 @@
     LAContext *context = [[LAContext alloc] init];
     NSError *error;
     
-    
+    NSLog(@"Navigation Controller %@",self.navigationController); 
     
     ImageCollectionViewController * icvc = [storyBoard instantiateViewControllerWithIdentifier:@"ImageCollectionViewController"];
     
-    [self presentViewController:icvc animated:YES completion:nil];
-    
+    [self.navigationController pushViewController:icvc animated:YES];
+        
     if([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error])
     {
         [context evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics localizedReason:@"Access Requires Authentication" reply:^(BOOL success, NSError* error){
             if (success) {
                 NSLog(@"User is authenticated successfully");
-                UIStoryboard * storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+                /*UIStoryboard * storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
                 
                 ImageCollectionViewController * icvc = [storyBoard instantiateViewControllerWithIdentifier:@"ImageCollectionViewController"];
                 
-                [self presentViewController:icvc animated:YES completion:nil];
+                [self presentViewController:icvc animated:YES completion:nil];*/
             } else {
                 switch (error.code) {
                     case LAErrorAuthenticationFailed:

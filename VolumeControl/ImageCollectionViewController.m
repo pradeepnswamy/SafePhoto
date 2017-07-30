@@ -9,6 +9,7 @@
 #import "ImageCollectionViewController.h"
 #import "ImageViewController.h"
 
+
 @interface ImageCollectionViewController ()
 {
     NSMutableArray *imageArray;
@@ -24,14 +25,22 @@ static NSString * const reuseIdentifier = @"Cell";
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.navigationController.navigationBar.hidden = NO;
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = NO;
-    
+
     // Register cell classes
     [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:reuseIdentifier];
     
     NSArray *imgList = [self getAllImages];
     imageArray = [[NSMutableArray alloc] initWithArray:imgList];
+}
+
+- (void) viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    self.navigationController.navigationBar.hidden = YES;
+    
 }
 
 - (NSArray *) getAllImages

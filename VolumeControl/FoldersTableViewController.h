@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FoldersTableViewController : UITableViewController
+@interface FoldersTableViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+
+@property (weak, nonatomic) IBOutlet UITableView *folderListTable;
 
 @end
