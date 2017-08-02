@@ -50,11 +50,8 @@ static NSString * const reuseIdentifier = @"Cell";
 
 - (NSArray *) getAllImages
 {
-    //NSString *path = [NSString stringWithFormat:@"Documents/%@", selectedFolder];
-    NSString *imgPath = [documentPath stringByAppendingPathComponent:selectedFolder];
     NSError *error;
     NSArray *dirContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:documentPath error:&error];
-//    NSLog(@"dirContent : %@", dirContent);
     return dirContent;
 }
 

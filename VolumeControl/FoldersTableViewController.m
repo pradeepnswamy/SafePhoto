@@ -14,6 +14,7 @@
 @interface FoldersTableViewController ()
 {
     NSMutableArray *folderListArray;
+    NSString *selectedFolder;
 }
 @end
 
@@ -44,7 +45,7 @@
     
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectZero];
     self.folderListTable.tableFooterView = footerView;
-    
+    self.folderListTable.tableHeaderView = [self tableHEaderView];
     [self.folderListTable reloadData];
 }
 
@@ -147,21 +148,24 @@
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *selectedFolder = [folderListArray objectAtIndex:indexPath.row];
+    selectedFolder = [folderListArray objectAtIndex:indexPath.row];
     [[GlobalSelector sharedInstance] setSelectedFolder:selectedFolder];
     [self showHiddenImageAfterAuthenticationForFolder:selectedFolder];
 }
 
+-(UIView *)tableHEaderView
+{
+    UIView *header = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)];
+    UILabel *lbl = [[UILabel alloc] initWithFrame:CGRectMake((header.frame.size.width/2) - 58, 5, 116, 30)];
+    [lbl setFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:18]];
+    lbl.text = @"Select Folder";
+    [header addSubview:lbl];
+    return header;
+}
 - (void)showHiddenImageAfterAuthenticationForFolder:(NSString *)selectedFolder
 {
     LAContext *context = [[LAContext alloc] init];
     NSError *error;
-    
-    UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    
-    ImageCollectionViewController * icvc = [storyBoard instantiateViewControllerWithIdentifier:@"ImageCollectionViewController"];
-    
-    [self.navigationController pushViewController:icvc animated:YES];
     
     if([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error])
     {
@@ -212,28 +216,57 @@
 
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Deleting will delete all data in the folder.Are sure want to Delete?" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+            [alert dismissViewControllerAnimated:YES completion:nil];
+            
+            [self deleteFolder:[folderListArray objectAtIndex:indexPath.row]];
+            // Delete the row from the data source
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        }]];
+        
+        [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+            [alert dismissViewControllerAnimated:YES completion:nil];
+        }]];
+        [self presentViewController:alert animated:YES completion:nil];
+        
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }   
 }
 
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+- (void) deleteFolder:(NSString *)folderName
+{
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSError *error;
+    NSString *path = [self.documentPath stringByAppendingPathComponent:folderName];
+    [folderListArray removeObject:folderName];
+    BOOL success = [fileManager removeItemAtPath:path error:&error];
+    if(success)
+        [self showAlert:@"Folder Deleted Successfully"];
+        
 }
-*/
 
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
+- (void)showAlert:(NSString*)message
+{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:message message:nil preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+        [alert dismissViewControllerAnimated:YES completion:nil];
+    }]];
+        
+    [self presentViewController:alert animated:YES completion:nil];
 }
-*/
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    NSLog(@"%@",NSStringFromCGPoint(scrollView.contentOffset));
+}
 
 
 #pragma mark - Navigation

@@ -8,10 +8,12 @@
 
 #import "ImageViewController.h"
 #import "FoldersTableViewController.h"
+#import "GlobalSelector.h"
 
 @interface ImageViewController ()
 {
     UIImage *img;
+    NSString *documentPath;
 }
 @end
 
@@ -29,18 +31,20 @@
     if(img == nil)
         img = [[UIImage alloc] init];
     
+    NSString *path = [[GlobalSelector sharedInstance] documentPath];
+    documentPath = [path stringByAppendingPathComponent:[[GlobalSelector sharedInstance] selectedFolder]];
+    
     img = [self getImageFrom:self.imageName];
     self.selectedImage.contentMode = UIViewContentModeScaleAspectFit;
     [self.selectedImage setImage:img];
-    // Do any additional setup after loading the view.
 }
 
 - (UIImage *)getImageFrom:(NSString *)imgStr
 {
-    NSString *imgPath = [NSHomeDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"Documents/MyFolder/%@", imgStr]];
-    NSData *d = [[NSFileManager defaultManager] contentsAtPath:imgPath];
+    NSString *imgPath = [documentPath stringByAppendingPathComponent:imgStr];
+    NSData *imgData = [[NSFileManager defaultManager] contentsAtPath:imgPath];
     
-    UIImage *img1 = [UIImage imageWithData:d];
+    UIImage *img1 = [UIImage imageWithData:imgData];
     return img1;
 }
 
