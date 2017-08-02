@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C31E7AC1F324F6600C263A3 /* GlobalSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C31E7AB1F324F6600C263A3 /* GlobalSelector.m */; };
 		2C909A971F27BC0B00AF86C8 /* ImageCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C909A961F27BC0B00AF86C8 /* ImageCollectionViewController.m */; };
 		2C909A9A1F27C31600AF86C8 /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C909A991F27C31600AF86C8 /* ImageViewController.m */; };
 		2C93CE391F237EE4007E105B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C93CE381F237EE4007E105B /* main.m */; };
@@ -19,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2C31E7AA1F324F6600C263A3 /* GlobalSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GlobalSelector.h; sourceTree = "<group>"; };
+		2C31E7AB1F324F6600C263A3 /* GlobalSelector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GlobalSelector.m; sourceTree = "<group>"; };
 		2C909A951F27BC0B00AF86C8 /* ImageCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageCollectionViewController.h; sourceTree = "<group>"; };
 		2C909A961F27BC0B00AF86C8 /* ImageCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageCollectionViewController.m; sourceTree = "<group>"; };
 		2C909A981F27C31600AF86C8 /* ImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
@@ -67,6 +70,8 @@
 		2C93CE361F237EE4007E105B /* VolumeControl */ = {
 			isa = PBXGroup;
 			children = (
+				2C31E7AA1F324F6600C263A3 /* GlobalSelector.h */,
+				2C31E7AB1F324F6600C263A3 /* GlobalSelector.m */,
 				2C93CE3A1F237EE4007E105B /* AppDelegate.h */,
 				2C93CE3B1F237EE4007E105B /* AppDelegate.m */,
 				2C93CE3D1F237EE4007E105B /* ViewController.h */,
@@ -168,6 +173,7 @@
 			files = (
 				2C909A9A1F27C31600AF86C8 /* ImageViewController.m in Sources */,
 				2C909A971F27BC0B00AF86C8 /* ImageCollectionViewController.m in Sources */,
+				2C31E7AC1F324F6600C263A3 /* GlobalSelector.m in Sources */,
 				2C93CE3F1F237EE4007E105B /* ViewController.m in Sources */,
 				2C93CE3C1F237EE4007E105B /* AppDelegate.m in Sources */,
 				2C93CE391F237EE4007E105B /* main.m in Sources */,
